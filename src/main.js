@@ -2,14 +2,30 @@
 // MAIN ENTRY - Vue App
 // ============================================================
 
+// ============================================================
+// MAIN ENTRY - dengan fallback global
+// ============================================================
+
+// Pastikan dayjs dan Dexie tersedia
+if (typeof window.dayjs === 'undefined') {
+  console.warn('dayjs tidak ditemukan, menggunakan fallback');
+  window.dayjs = (date) => ({ format: () => date || '-', subtract: () => ({ format: () => '' }) });
+}
+if (typeof window.Dexie === 'undefined') {
+  console.warn('Dexie tidak ditemukan, aplikasi tidak akan berfungsi');
+  alert('Dexie tidak ditemukan. Pastikan koneksi internet dan CDN tersedia.');
+}
+
 import { createApp, ref, reactive, computed, watch, onMounted } from 'vue';
 import { C, TABS, FILTER_OPTS, SEED_TEMPLATE } from './constants.js';
 import { formatRupiah, formatDate, todayStr, sum } from './utils.js';
 import { Query, Command } from './db.js';
 import { useToast, useFilter, useForm } from './composables.js';
-import { MainPipeline, injectContext, ContextInventory, ContextSales, ContextFinance } from './pipeline.js';
+import { MainPipeline, injectContext } from './pipeline.js';
 import { debounce } from './directives.js';
 
+// ... sisanya sama seperti main.js sebelumnya, 
+// tapi pastikan semua import menggunakan ekstensi .js (sudah).
 // ============================================================
 // APP
 // ============================================================
