@@ -1,6 +1,8 @@
 // ============================================================
-// UTILITY FUNCTIONS
+// UTILITY FUNCTIONS - menggunakan window.dayjs
 // ============================================================
+
+const dayjs = window.dayjs;
 
 export const formatRupiah = (v, d = '0') =>
   v == null || isNaN(v) ? d : Math.round(v).toLocaleString('id-ID');
