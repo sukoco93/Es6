@@ -1,11 +1,14 @@
 // ============================================================
 // COMPOSABLES (Reactive Logic)
 // ============================================================
-
 import { ref, reactive } from 'vue';
-import { C, FILTER_OPTS } from './constants.js';
+import { C } from './constants.js';
 import { todayStr, sum } from './utils.js';
 
+const dayjs = window.dayjs;
+
+// ... sisanya sama (useToast, useFilter, useForm) 
+// pastikan di useFilter gunakan dayjs untuk subtract.
 // ===== useToast =====
 export function useToast() {
   const toast = reactive({ show: false, message: '', type: C.TOAST.SUCCESS, _timer: null });
