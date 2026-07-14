@@ -1,6 +1,9 @@
 // ============================================================
-// DATABASE LAYER (Dexie) - CQRS: Query & Command
+// DATABASE LAYER - menggunakan window.Dexie
 // ============================================================
+
+const Dexie = window.Dexie;
+if (!Dexie) throw new Error('Dexie tidak tersedia');
 
 const db = new Dexie('ERP_Tempe');
 db.version(1).stores({
@@ -15,11 +18,10 @@ db.version(1).stores({
 });
 db.open();
 
-// Sanitasi untuk menghindari DataCloneError
+// Sanitasi
 function sanitizeForDB(obj) {
-  try {
-    return JSON.parse(JSON.stringify(obj));
-  } catch {
+  try { return JSON.parse(JSON.stringify(obj)); }
+  catch {
     const safe = Array.isArray(obj) ? [] : {};
     for (const key in obj) {
       if (!Object.prototype.hasOwnProperty.call(obj, key)) continue;
@@ -55,11 +57,8 @@ export const Command = {
   async saveAll(data) {
     const sanitized = {};
     for (const [key, val] of Object.entries(data)) {
-      try {
-        sanitized[key] = sanitizeForDB(val) || [];
-      } catch {
-        sanitized[key] = [];
-      }
+      try { sanitized[key] = sanitizeForDB(val) || []; }
+      catch { sanitized[key] = []; }
     }
     await Promise.all([
       db.pelanggan.bulkPut(sanitized.pelanggan || []),
@@ -71,7 +70,6 @@ export const Command = {
       db.saldo_log.bulkPut(sanitized.saldo_log || [])
     ]);
   },
-
   async reset() {
     await db.delete();
     await db.open();
